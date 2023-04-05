@@ -19,8 +19,8 @@
    <string>Login</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../images/imgs_qrc.qrc">
-    <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+   <iconset>
+    <normaloff>../../images/icon.png</normaloff>../../images/icon.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -152,7 +152,7 @@ font: 8pt &quot;Courier&quot;;</string>
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="../images/imgs_qrc.qrc">:/images/logo.png</pixmap>
+       <pixmap>../../images/logo.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -163,7 +163,7 @@ font: 8pt &quot;Courier&quot;;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../images/imgs_qrc.qrc"/>
+  <include location="../qrc/imgs_qrc.qrc"/>
  </resources>
  <connections/>
 </ui>
