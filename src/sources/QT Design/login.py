@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'login2.ui'
+# Form implementation generated from reading ui file 'login.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -51,24 +51,23 @@ class Ui_Form(object):
         self.label_3 = QtWidgets.QLabel(self.frame)
         self.label_3.setGeometry(QtCore.QRect(90, 200, 81, 16))
         self.label_3.setObjectName("label_3")
-        self.lineEdit = QtWidgets.QLineEdit(self.frame)
-        self.lineEdit.setGeometry(QtCore.QRect(180, 160, 131, 20))
-        self.lineEdit.setObjectName("lineEdit")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.frame)
-        self.lineEdit_2.setGeometry(QtCore.QRect(180, 200, 131, 20))
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.pushButton = QtWidgets.QPushButton(self.frame)
-        self.pushButton.setGeometry(QtCore.QRect(160, 260, 75, 23))
+        self.inputCorreo = QtWidgets.QLineEdit(self.frame)
+        self.inputCorreo.setGeometry(QtCore.QRect(180, 160, 131, 20))
+        self.inputCorreo.setObjectName("inputCorreo")
+        self.inputContrasena = QtWidgets.QLineEdit(self.frame)
+        self.inputContrasena.setGeometry(QtCore.QRect(180, 200, 131, 20))
+        self.inputContrasena.setObjectName("inputContrasena")
+        self.buttonEnviar = QtWidgets.QPushButton(self.frame)
+        self.buttonEnviar.setGeometry(QtCore.QRect(160, 260, 75, 23))
         font = QtGui.QFont()
         font.setFamily("Courier")
         font.setPointSize(8)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
-        self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("")
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton.clicked.connect(self.obtener)##########
+        self.buttonEnviar.setFont(font)
+        self.buttonEnviar.setStyleSheet("")
+        self.buttonEnviar.setObjectName("buttonEnviar")
         self.label_4 = QtWidgets.QLabel(self.frame)
         self.label_4.setGeometry(QtCore.QRect(150, 20, 101, 101))
         self.label_4.setText("")
@@ -85,10 +84,11 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Login"))
         self.label_2.setText(_translate("Form", "Correo"))
         self.label_3.setText(_translate("Form", "Contraseña"))
-        self.pushButton.setText(_translate("Form", "Enviar"))
-
-    def obtener(self):
-        print("Funciona")
+        self.buttonEnviar.setText(_translate("Form", "Enviar"))
+import sys
+import os
+actualPath = os.getcwd()+"/src/sources/images"
+sys.path.append(actualPath)
 
 import imgs_qrc_rc
 
