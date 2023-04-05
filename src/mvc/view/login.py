@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
+from controller.LoginController import LoginController
 actualPath = os.getcwd()+"/src/sources/QT Design/qrc"
 sys.path.append(actualPath)
 
@@ -80,6 +81,8 @@ class Ui_Form(object):
         self.label_4.setObjectName("label_4")
         self.verticalLayout.addWidget(self.frame)
 
+        self.buttonEnviar.clicked.connect(self.sendData)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -90,3 +93,9 @@ class Ui_Form(object):
         self.label_3.setText(_translate("Form", "Contraseña"))
         self.buttonEnviar.setText(_translate("Form", "Enviar"))
 
+    def sendData(self):
+        loginController = LoginController()
+        correo= self.inputCorreo.text().strip()
+        contraseña= self.inputContrasena.text().strip()
+        
+        loginController.controlador(correo,contraseña)
