@@ -2,15 +2,17 @@ from model.Administrador import Administrador
 
 class LoginController():
 
-    def controlador(self, correo:str, contraseña:str):
+    def controller(self, correo:str, contraseña:str):
+        
+        respuesta:bool = False
 
-        #print("Entre al controlador")
-        #ejemplo = Administrador("correo@corre","contrAA",123456798,"Marcos")
-        #Administrador.iniciarSesion()
-        if len(correo):
-            print("El correo es", correo," y contraseña es",contraseña)
-            Administrador.iniciarSesion()
-        else:
-            pass
+        if len(correo and contraseña):
+            #respuesta = True
+            respuesta = Administrador.iniciarSesion(correo,contraseña)
+            #admin = Administrador()
+            #admin.iniciarSesion(correo,contraseña)
+            
+        
+        return respuesta
         
         #pass

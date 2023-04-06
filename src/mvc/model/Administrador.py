@@ -10,9 +10,17 @@ class Administrador(Persona):
         self.contraseña = contraseña
         Administrador.arrayAdministradores.append([self.cedula, self.nombre, self.correo, self.contraseña])
 
-    def iniciarSesion():
-        #print("El usuario", self.nombre, "contraseña", self.contraseña, "inicio sesión")
-        print(Administrador.arrayAdministradores)
+    def iniciarSesion(correo, contraseña):
+        
+        repuesta = False
+        
+        for administradores in Administrador.arrayAdministradores:
+            
+            if correo == administradores[2] and contraseña == administradores[3]:
+
+                repuesta = True
+        
+        return repuesta
 
     def registrarLlegada(self):
         pass
