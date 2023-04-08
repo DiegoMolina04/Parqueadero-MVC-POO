@@ -12,13 +12,13 @@ class Administrador(Persona):
 
     def iniciarSesion(correo, contraseña):
         
-        repuesta = False
+        repuesta = [False, None]
         
         for administradores in Administrador.arrayAdministradores:
             
             if correo == administradores[2] and contraseña == administradores[3]:
 
-                repuesta = True
+                repuesta = [True, administradores]
         
         return repuesta
 
