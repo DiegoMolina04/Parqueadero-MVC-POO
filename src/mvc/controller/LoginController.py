@@ -1,4 +1,5 @@
 from model.Administrador import Administrador
+from controller.ParqueaderoController import ParqueaderoController
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5 import QtWidgets, QtGui, uic
 import os, sys
@@ -59,3 +60,5 @@ class LoginController():
 
     def cerrarLogin():
         LoginController.login.close()
+        vistaParqueadero = ParqueaderoController()
+        vistaParqueadero.iniciarParqueadero()
