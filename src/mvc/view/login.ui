@@ -113,6 +113,9 @@ font: 8pt &quot;Courier&quot;;</string>
         <height>20</height>
        </rect>
       </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
      </widget>
      <widget class="QPushButton" name="buttonEnviar">
       <property name="geometry">
@@ -163,7 +166,7 @@ font: 8pt &quot;Courier&quot;;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../qrc/imgs_qrc.qrc"/>
+  <include location="../../sources/QT Design/qrc/imgs_qrc.qrc"/>
  </resources>
  <connections/>
 </ui>
