@@ -10,14 +10,14 @@ import imgs_qrc_rc
 class LoginController():
 
     app = QtWidgets.QApplication([])
-    actualPath = os.getcwd()+"/src/mvc/view/login.ui"
-    login = uic.loadUi(actualPath)
+    path = os.getcwd()+"/src/mvc/view/login.ui"
+    login = uic.loadUi(path)
 
     def iniciarLogin(self):
 
         LoginController.login.buttonEnviar.clicked.connect(LoginController.generarCuadroDialogo)
         LoginController.login.show()
-        LoginController.app.exec()
+        LoginController.app.exec_()
 
     def generarCuadroDialogo(self):
 
@@ -58,7 +58,13 @@ class LoginController():
 
         return mensaje
 
+    def limpiarCampos():
+        LoginController.login.inputCorreo.setText("")
+        LoginController.login.inputContrasena.setText("")
+
     def cerrarLogin():
+        LoginController.limpiarCampos()
         LoginController.login.close()
         vistaParqueadero = ParqueaderoController()
         vistaParqueadero.iniciarParqueadero()
+    
