@@ -2,7 +2,11 @@ from model.Persona import Persona
 from model.Parqueadero import Parqueadero
 from datetime import datetime
 #from controller.LoginController import LoginController
-import pandas
+import pandas, os, sys
+actualPath = os.getcwd()+"/src/sources/db"
+sys.path.append(actualPath)
+
+import dbConnection
 
 class Administrador(Persona):
 
@@ -12,17 +16,22 @@ class Administrador(Persona):
         super().__init__(cedulaAdministrador, nombreAdministrador)
         self.correo = correo
         self.contraseña = contraseña
-        Administrador.arrayAdministradores.append([self.cedula, self.nombre, self.correo, self.contraseña])
+        #Administrador.arrayAdministradores.append([self.cedula, self.nombre, self.correo, self.contraseña])
 
     def iniciarSesion(correo:str, contraseña:str):
         
         repuesta = [False, None]
-        
-        for administradores in Administrador.arrayAdministradores:
-            
-            if correo == administradores[2] and contraseña == administradores[3]:
 
-                repuesta = [True, administradores]
+        query = dbConnection.connection()
+        query.execute("SELECT * FROM public.administrador ORDER BY id ASC ")
+
+        administradores = query.fetchall()
+
+        for persona in administradores:
+            
+            if correo == persona[1] and contraseña == persona[2]:
+
+                repuesta = [True, persona]
         
         return repuesta
 
