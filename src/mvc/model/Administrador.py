@@ -23,15 +23,16 @@ class Administrador(Persona):
         repuesta = [False, None]
 
         query = dbConnection.connection()
-        query.execute("SELECT * FROM public.administrador ORDER BY id ASC ")
+        query[1].execute("SELECT * FROM public.administrador ORDER BY id ASC ")
 
-        administradores = query.fetchall()
+        administradores = query[1].fetchall()
 
-        for persona in administradores:
+        if len(administradores):
+            for persona in administradores:
             
-            if correo == persona[1] and contraseña == persona[2]:
+                if correo == persona[1] and contraseña == persona[2]:
 
-                repuesta = [True, persona]
+                    repuesta = [True, persona]
         
         return repuesta
 
