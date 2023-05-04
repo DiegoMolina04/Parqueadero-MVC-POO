@@ -11,7 +11,7 @@ def connection():
         )
 
         cursor = connection.cursor()
-        return cursor
+        return connection, cursor
 
     except Exception:
         print("Error conexión en base de datos")
