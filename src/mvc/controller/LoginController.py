@@ -46,7 +46,7 @@ class LoginController():
 
         if respuesta[0] != False and respuesta[1] != None:
             
-            mensaje = [True, f"¡Bienvenido al sistema {respuesta[1][1]}!", QMessageBox.Information]
+            mensaje = [True, f"¡Bienvenido al sistema {respuesta[1][4]}!", QMessageBox.Information]
 
         elif respuesta[0] == False and respuesta[1] == "":
 
