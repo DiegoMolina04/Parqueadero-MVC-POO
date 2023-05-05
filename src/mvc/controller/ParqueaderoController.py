@@ -6,7 +6,7 @@ from PyQt5 import QtWidgets, QtGui, uic
 from PyQt5.QtWidgets import QMessageBox
 from datetime import datetime
 #from controller.LoginController import LoginController
-import os, sys
+import os, sys, locale
 
 from time import sleep
 
@@ -82,7 +82,7 @@ class ParqueaderoController():
                     respuesta = Administrador.registrarLlegada(nuevoCliente.cedula,nuevoCliente.nombre,nuevoCarro.placa,nuevoCarro.marca,nuevoCarro.modelo,nuevoCarro.color,espacioSeleccionado,nuevoCliente.hora)
 
                     if respuesta == True:
-                        mensaje = [f"Se a registrado llegada correctamente de {nuevoCliente.nombre}", QMessageBox.Information]
+                        mensaje = [f"Se a registrado correctamente la llegada de {nuevoCliente.nombre}", QMessageBox.Information]
                         ParqueaderoController.limpiarCamposLlegada()
                         espaciosDisponibles = Parqueadero.obtenerEspacioDisponible()
                         ParqueaderoController.parqueadero.comboEspacios.clear()
@@ -114,16 +114,26 @@ class ParqueaderoController():
     def registrarSalida():
         
         cedulaSalida = ParqueaderoController.parqueadero.inputCedulaSalida.text()
+        #mensaje = [None, None]
 
         if len(cedulaSalida):
             
             try:
                 cedulaSalida = int(cedulaSalida)
                 respuesta = Administrador.registrarSalida(cedulaSalida)
+
+                print("MI RESPUESTA", respuesta)
                 
                 if respuesta[0] == True:
                     
                     valorPagar = ParqueaderoController.calcularPago(respuesta[2])
+
+                    ParqueaderoController.actualizarDineroTotal(valorPagar)
+
+                    locale.setlocale(locale.LC_MONETARY, 'es-CO') #Se indica cual es la moneda local -> Colombia
+                    valorFormateado = locale.currency(valorPagar) #Se da formato de moneda al valorPagar
+
+                    #valorPagar = 0
                     
                     #Se borra información del array Clientes
                     iteradorCliente = 0
@@ -132,19 +142,18 @@ class ParqueaderoController():
                             Cliente.arrayClientes.pop(iteradorCliente)
                         
                         iteradorCliente = iteradorCliente+1
-
+                    
                     #Se borra información del array Carro
                     iteradorCarro = 0
                     
                     for datos in Carro.arrayCarro:
                         #print("Estos son los valores del array antes\n",datos)
                         if datos[0] == cedulaSalida:
-                            mensaje = [f"Se retira el cliente {respuesta[1]} con el auto marca {datos[2]} {datos[3]}, color {datos[4]}, placa {datos[1]} y paga ${valorPagar}", QMessageBox.Information]
+                            mensaje = [f"Se retira el cliente {respuesta[1]} con el auto marca {datos[2]} {datos[3]}, color {datos[4]}, placa {datos[1]} y paga {valorFormateado} pesos", QMessageBox.Information]
                             Carro.arrayCarro.pop(iteradorCarro)
                         
                         iteradorCarro = iteradorCarro+1
-        
-                    #mensaje = [f"Se retira el cliente {respuesta[1]}", QMessageBox.Information]
+
                     ParqueaderoController.limpiarCampoSalida()
                     espaciosDisponibles = Parqueadero.obtenerEspacioDisponible()
                     ParqueaderoController.parqueadero.comboEspacios.clear()
@@ -160,6 +169,7 @@ class ParqueaderoController():
             mensaje = ["Debe completar el campo", QMessageBox.Warning]
 
         ParqueaderoController.generarCuadroDialogo(mensaje)
+        #print("Este es el valor de mensaje",mensaje)
 
     def terminarSesion():
 
@@ -178,3 +188,7 @@ class ParqueaderoController():
         valorPagar = Cliente.realizarPago(horaLlegada)
 
         return valorPagar
+
+    def actualizarDineroTotal(valorSumar):
+        
+        Parqueadero.actualizarDineroTotal(valorSumar)
