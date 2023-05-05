@@ -119,15 +119,20 @@ class Parqueadero():
         return arrayRespuesta
     
     def insertarEspacioNuevo(niveles:int, espaciosAparcar:int):
-        Parqueadero.query[1].execute(f'INSERT INTO public."tamano_parqueadero" (niveles, espacios_aparcar) VALUES ({niveles}, {espaciosAparcar})')
+        Parqueadero.query[1].execute(f'INSERT INTO public."tamano_parqueadero" (niveles, espacios_aparcar, dinero_total) VALUES ({niveles}, {espaciosAparcar}, 0)')
         Parqueadero.query[0].commit()
 
     def consultarID(niveles:int, espaciosAparcar:int):
         Parqueadero.query[1].execute(f'SELECT * FROM public."tamano_parqueadero" WHERE niveles = {niveles} AND espacios_aparcar = {espaciosAparcar}')
         id = Parqueadero.query[1].fetchall()
         return id[0]
-    # def verificar(self):
-    #     print("Los espacios son\n", self.arrayEspacios)
-    #     self.arrayEspacios[1][1] = False
-    #     self.arrayEspacios[1][2] = False
-    #     print("Los espacios son\n", self.arrayEspacios)
+
+    def actualizarDineroTotal(valorSumar):
+        Parqueadero.query[1].execute(f'SELECT "dinero_total" FROM public."tamano_parqueadero" WHERE id = {Parqueadero.idActual}')
+        dineroGuardado = Parqueadero.query[1].fetchone()
+
+        print("ESTE ES EL DINERO GUARADO",dineroGuardado[0])
+        dineroTotal = float (dineroGuardado[0])+valorSumar
+
+        Parqueadero.query[1].execute(f'UPDATE public."tamano_parqueadero" SET dinero_total={dineroTotal} WHERE id = {Parqueadero.idActual}')
+        Parqueadero.query[0].commit()
