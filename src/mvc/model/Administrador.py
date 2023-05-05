@@ -56,8 +56,9 @@ class Administrador(Persona):
                 
                 if espaciosDisponibles[y][x].get('Espacio') == espacioSeleccionado:
                     #print("Este es el array de datos",espaciosDisponibles[y][x])
-                    Parqueadero.arrayEspacios[x][y] = {"Disponibilidad":False, "Espacio":espacioSeleccionado, "Cédula":cedulaEntrada,"Nombre":nombre, "Placa":placa, "Marca":marca, "Modelo":modelo, "Color":color, "Hora_Llegada":horaLlegada}
-                    print("Este es el array actualizado\n",Parqueadero.arrayEspacios)
+                    Parqueadero.arrayEspacios[x][y] = {"Disponibilidad":False, "Espacio":espacioSeleccionado, "Cédula":cedulaEntrada,"Nombre":nombre, "Placa":placa, "Marca":marca, "Modelo":modelo, "Color":color, "Hora_Llegada":hora}
+                    #Parqueadero.arrayEspacios[x][y] = {"Disponibilidad":False, "Espacio":espacioSeleccionado, "Cédula":cedulaEntrada,"Nombre":nombre, "Placa":placa, "Marca":marca, "Modelo":modelo, "Color":color, "Hora_Llegada":horaLlegada}
+                    #print("Este es el array actualizado\n",Parqueadero.arrayEspacios)
                     return True
         
         
@@ -75,6 +76,12 @@ class Administrador(Persona):
             for y in range(espaciosDisponibles.shape[1]):
                 
                 if espaciosDisponibles[y][x].get('Cédula') == cedulaSalida:
+                    
+                    queryEliminar = """DELETE FROM public."parqueadero" WHERE cedula = %s"""
+                    data = (cedulaSalida,)
+
+                    Administrador.query[1].execute(queryEliminar, data)
+                    Administrador.query[0].commit()
 
                     nombre = espaciosDisponibles[y][x].get('Nombre')
                     hora = espaciosDisponibles[y][x].get('Hora_Llegada')
@@ -83,7 +90,7 @@ class Administrador(Persona):
                     Parqueadero.arrayEspacios[x][y] = {"Disponibilidad":True, "Espacio":espacio, "Cédula":"","Nombre":"", "Placa":"", "Marca":"", "Modelo":"", "Color":"", "Hora_Llegada":""}
 
                     arrayRespuesta = [True, nombre, hora]
-                    print("Este es el array salida\n",Parqueadero.arrayEspacios)
+                    #print("Este es el array salida\n",Parqueadero.arrayEspacios)
                     return arrayRespuesta
         
         return arrayRespuesta
