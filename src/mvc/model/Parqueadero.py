@@ -20,19 +20,19 @@ class Parqueadero():
         #print("Este es el array\n",Parqueadero.arrayEspacios)
 
         
-        Parqueadero.query[1].execute('SELECT * FROM public."tamaño_parqueadero" ORDER BY id ASC')
+        Parqueadero.query[1].execute('SELECT * FROM public."tamano_parqueadero" ORDER BY id ASC')
         
-        tamañoParqueadero = Parqueadero.query[1].fetchall() #Se busca si hay algo registrado en la tabla tamaño_parqueadero
+        tamañoParqueadero = Parqueadero.query[1].fetchall() #Se busca si hay algo registrado en la tabla tamano_parqueadero
 
         #Parqueadero.query.close()
 
-        if len(tamañoParqueadero): #Si hay algo en la tabla tamaño_parqueadero
+        if len(tamañoParqueadero): #Si hay algo en la tabla tamano_parqueadero
 
             print("Hay algo en parqueadero")
 
             registroEncontrado = False
 
-            for espacioGuardado in tamañoParqueadero: #Se busca si dentro de la tabla tamaño_parqueadero estan los datos con los que se inicializa el parqueadero
+            for espacioGuardado in tamañoParqueadero: #Se busca si dentro de la tabla tamano_parqueadero estan los datos con los que se inicializa el parqueadero
 
                 if espacioGuardado[1] == self.niveles and espacioGuardado[2] == self.espaciosAparcar: #Se busca guardado el mismo tamaño ingresado
                     
@@ -40,9 +40,9 @@ class Parqueadero():
                     print("Se encontro",espacioGuardado[1],espacioGuardado[2])
                     registroEncontrado = True
 
-            if (registroEncontrado): #Si se encuentra el mismo valor dentro de la tabla tamaño_parqueadero
+            if (registroEncontrado): #Si se encuentra el mismo valor dentro de la tabla tamano_parqueadero
                 
-                Parqueadero.query[1].execute(f'SELECT * FROM public.parqueadero WHERE tamaño_parqueadero = {Parqueadero.idActual}')
+                Parqueadero.query[1].execute(f'SELECT * FROM public.parqueadero WHERE tamano_parqueadero = {Parqueadero.idActual}')
                 espaciosOcupados = Parqueadero.query[1].fetchall() #Se verifica la tabla parqueadero buscando esos mismos valores
                 
                 if len(espaciosOcupados): #Si se encuentran valores, se inicia el parqueadero con los espacios ocupados
@@ -58,13 +58,13 @@ class Parqueadero():
                     Parqueadero.idActual = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
                     Parqueadero.iniciarParqueaderoVacio(self.niveles,self.espaciosAparcar) #Se inicia el parqueadero con disponibilidad en todos
             
-            else: #Si no se encuentra el mismo valor, se guardan los nuevos valores en la tabla tamaño_parqueadero y se inicia el parqueadero vacio
+            else: #Si no se encuentra el mismo valor, se guardan los nuevos valores en la tabla tamano_parqueadero y se inicia el parqueadero vacio
                 
                 Parqueadero.insertarEspacioNuevo(self.niveles,self.espaciosAparcar)
                 Parqueadero.idActual = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
                 Parqueadero.iniciarParqueaderoVacio(self.niveles,self.espaciosAparcar) #Se identifica que no hay espacios guardados, se inicia el parqueadero con disponibilidad en todos
         
-        else: #Si no, se guardan los nuevos valores en la tabla tamaño_parqueadero y se inicia el parqueadero vacio
+        else: #Si no, se guardan los nuevos valores en la tabla tamano_parqueadero y se inicia el parqueadero vacio
             print("Parqueadero vacio")
             Parqueadero.insertarEspacioNuevo(self.niveles,self.espaciosAparcar)
             Parqueadero.idActual = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
@@ -119,11 +119,11 @@ class Parqueadero():
         return arrayRespuesta
     
     def insertarEspacioNuevo(niveles:int, espaciosAparcar:int):
-        Parqueadero.query[1].execute(f'INSERT INTO public."tamaño_parqueadero" (niveles, espacios_aparcar) VALUES ({niveles}, {espaciosAparcar})')
+        Parqueadero.query[1].execute(f'INSERT INTO public."tamano_parqueadero" (niveles, espacios_aparcar) VALUES ({niveles}, {espaciosAparcar})')
         Parqueadero.query[0].commit()
 
     def consultarID(niveles:int, espaciosAparcar:int):
-        Parqueadero.query[1].execute(f'SELECT * FROM public."tamaño_parqueadero" WHERE niveles = {niveles} AND espacios_aparcar = {espaciosAparcar}')
+        Parqueadero.query[1].execute(f'SELECT * FROM public."tamano_parqueadero" WHERE niveles = {niveles} AND espacios_aparcar = {espaciosAparcar}')
         id = Parqueadero.query[1].fetchall()
         return id[0]
     # def verificar(self):
