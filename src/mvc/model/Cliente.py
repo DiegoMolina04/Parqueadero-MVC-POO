@@ -26,9 +26,6 @@ class Cliente(Persona):
         
         valorPagar = round((tiempoTranscurrido.total_seconds()*valorCosto),3) #Se multiplica la diferencia de tiempo por valorCosto y redondea el valor a 3 decimales
 
-        # locale.setlocale(locale.LC_MONETARY, 'es-CO') #Se indica cual es la moneda local -> Colombia
-        # valorPagar = locale.currency(valorPagar) #Se da formato de moneda al valorPagar
-
         return valorPagar
 
     def conducir(self):

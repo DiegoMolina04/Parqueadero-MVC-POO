@@ -5,10 +5,7 @@ from model.Carro import Carro
 from PyQt5 import QtWidgets, QtGui, uic
 from PyQt5.QtWidgets import QMessageBox
 from datetime import datetime
-#from controller.LoginController import LoginController
 import os, sys, locale
-
-from time import sleep
 
 actualPath = os.getcwd()+"/src/sources/QT Design/qrc"
 sys.path.append(actualPath)
@@ -23,6 +20,7 @@ class ParqueaderoController():
     def iniciarParqueadero(self):
         
         ParqueaderoController.parqueadero.setWindowIcon(QtGui.QIcon(":/images/icon.png"))
+
         ParqueaderoController.parqueadero.buttonLimpiar.clicked.connect(ParqueaderoController.limpiarCamposLlegada)
         ParqueaderoController.parqueadero.buttonRegistrarLlegada.clicked.connect(ParqueaderoController.registrarLlegada)
 
@@ -32,7 +30,8 @@ class ParqueaderoController():
         ParqueaderoController.parqueadero.buttonLimpiarCampo.clicked.connect(ParqueaderoController.limpiarCampoSalida)
         ParqueaderoController.parqueadero.buttonRegistrarSalida.clicked.connect(ParqueaderoController.registrarSalida)
 
-        #ParqueaderoController.parqueadero.buttonSalir.clicked.connect(ParqueaderoController.terminarSesion)
+        ParqueaderoController.parqueadero.buttonDineroTotal.clicked.connect(ParqueaderoController.dineroTotal)
+
         ParqueaderoController.parqueadero.buttonSalir.clicked.connect(ParqueaderoController.terminarSesion)
 
         ParqueaderoController.parqueadero.show()
@@ -67,17 +66,9 @@ class ParqueaderoController():
                 try:
                     cedulaEntrada = int(cedulaEntrada)
                     horaLlegada = datetime.now()
-                    #now = dt.strftime('%H:%M:%S')
+
                     nuevoCliente = Cliente(horaLlegada,cedulaEntrada,nombre)
                     nuevoCarro = Carro(nuevoCliente.cedula,placa,marca,modelo,color)
-
-                    # sleep(10)
-                    # ejemplo = datetime.now()
-                    # now_2 = ejemplo.strftime('%H:%M:%S')
-
-                    # resultado = (ejemplo-dt)
-
-                    # print("La diferencia de hora es",resultado.total_seconds())
 
                     respuesta = Administrador.registrarLlegada(nuevoCliente.cedula,nuevoCliente.nombre,nuevoCarro.placa,nuevoCarro.marca,nuevoCarro.modelo,nuevoCarro.color,espacioSeleccionado,nuevoCliente.hora)
 
@@ -114,15 +105,12 @@ class ParqueaderoController():
     def registrarSalida():
         
         cedulaSalida = ParqueaderoController.parqueadero.inputCedulaSalida.text()
-        #mensaje = [None, None]
 
         if len(cedulaSalida):
             
             try:
                 cedulaSalida = int(cedulaSalida)
                 respuesta = Administrador.registrarSalida(cedulaSalida)
-
-                print("MI RESPUESTA", respuesta)
                 
                 if respuesta[0] == True:
                     
@@ -130,10 +118,8 @@ class ParqueaderoController():
 
                     ParqueaderoController.actualizarDineroTotal(valorPagar)
 
-                    locale.setlocale(locale.LC_MONETARY, 'es-CO') #Se indica cual es la moneda local -> Colombia
-                    valorFormateado = locale.currency(valorPagar) #Se da formato de moneda al valorPagar
-
-                    #valorPagar = 0
+                    locale.setlocale(locale.LC_MONETARY, 'es-CO.UTF-8') #Se indica cual es la moneda local -> Colombia
+                    valorFormateado = locale.currency(valorPagar, grouping=True) #Se da formato de moneda al valorPagar
                     
                     #Se borra información del array Clientes
                     iteradorCliente = 0
@@ -147,7 +133,6 @@ class ParqueaderoController():
                     iteradorCarro = 0
                     
                     for datos in Carro.arrayCarro:
-                        #print("Estos son los valores del array antes\n",datos)
                         if datos[0] == cedulaSalida:
                             mensaje = [f"Se retira el cliente {respuesta[1]} con el auto marca {datos[2]} {datos[3]}, color {datos[4]}, placa {datos[1]} y paga {valorFormateado} pesos", QMessageBox.Information]
                             Carro.arrayCarro.pop(iteradorCarro)
@@ -169,21 +154,28 @@ class ParqueaderoController():
             mensaje = ["Debe completar el campo", QMessageBox.Warning]
 
         ParqueaderoController.generarCuadroDialogo(mensaje)
-        #print("Este es el valor de mensaje",mensaje)
+
+    def dineroTotal():
+        
+        respuesta = Parqueadero.obtenerDineroTotal()
+        
+        locale.setlocale(locale.LC_MONETARY, 'es-CO.UTF-8') #Se indica cual es la moneda local -> Colombia
+        valorFormateado = locale.currency(respuesta, grouping=True) #Se da formato de moneda al valorPagar
+
+        if respuesta == 0.00 or respuesta == 0:
+            mensaje = [f"El parqueadero no a generado ingresos", QMessageBox.Information]
+        else:
+            mensaje = [f"El dinero total generado por este parqueadero es {valorFormateado} pesos", QMessageBox.Information]
+
+        ParqueaderoController.generarCuadroDialogo(mensaje)
 
     def terminarSesion():
 
         ParqueaderoController.parqueadero.close()
-        print("Entre al terminar sesion")
         Administrador.terminarSesion()
 
 
     def calcularPago(horaLlegada:datetime):
-        
-        # horaSalida = datetime.now()
-        # tiempoTranscurrido = horaSalida-horaLlegada
-        # valorCosto = 10
-        # valorPagar = round((tiempoTranscurrido.total_seconds()*valorCosto),3)
 
         valorPagar = Cliente.realizarPago(horaLlegada)
 

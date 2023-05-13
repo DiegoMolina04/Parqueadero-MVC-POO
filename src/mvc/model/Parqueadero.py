@@ -13,22 +13,14 @@ class Parqueadero():
     def __init__(self, niveles:int, espaciosAparcar:int):
         self.espaciosAparcar = espaciosAparcar
         self.niveles = niveles
-        #self.arrayEspacios = numpy.full((niveles,espaciosAparcar), fill_value= {})
-        Parqueadero.arrayEspacios = numpy.full((niveles,espaciosAparcar), fill_value= {})
-        
-        #print("Este es el array\n",self.arrayEspacios)
-        #print("Este es el array\n",Parqueadero.arrayEspacios)
 
+        Parqueadero.arrayEspacios = numpy.full((niveles,espaciosAparcar), fill_value= {})
         
         Parqueadero.query[1].execute('SELECT * FROM public."tamano_parqueadero" ORDER BY id ASC')
         
         tamañoParqueadero = Parqueadero.query[1].fetchall() #Se busca si hay algo registrado en la tabla tamano_parqueadero
 
-        #Parqueadero.query.close()
-
         if len(tamañoParqueadero): #Si hay algo en la tabla tamano_parqueadero
-
-            print("Hay algo en parqueadero")
 
             registroEncontrado = False
 
@@ -37,7 +29,6 @@ class Parqueadero():
                 if espacioGuardado[1] == self.niveles and espacioGuardado[2] == self.espaciosAparcar: #Se busca guardado el mismo tamaño ingresado
                     
                     Parqueadero.idActual = espacioGuardado[0]
-                    print("Se encontro",espacioGuardado[1],espacioGuardado[2])
                     registroEncontrado = True
 
             if (registroEncontrado): #Si se encuentra el mismo valor dentro de la tabla tamano_parqueadero
@@ -46,37 +37,28 @@ class Parqueadero():
                 espaciosOcupados = Parqueadero.query[1].fetchall() #Se verifica la tabla parqueadero buscando esos mismos valores
                 
                 if len(espaciosOcupados): #Si se encuentran valores, se inicia el parqueadero con los espacios ocupados
-                    #puestosOcupados = []
-                    print("Estos son los puestos ocupados",espaciosOcupados)
-                    # for espacio in espaciosOcupados:
-                    #     puestosOcupados.append(espacio[2])
 
                     Parqueadero.iniciarParqueadero(self.niveles,self.espaciosAparcar, espaciosOcupados) #Se identifica que si hay espacios guardados, se pasa a comprobar si hay algun carro parqueado
 
                 else: #Si no se encuentran valores, se inicia el parqueadero vacio.
                     
-                    Parqueadero.idActual = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
+                    id = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
+                    Parqueadero.idActual = id[0]
                     Parqueadero.iniciarParqueaderoVacio(self.niveles,self.espaciosAparcar) #Se inicia el parqueadero con disponibilidad en todos
             
             else: #Si no se encuentra el mismo valor, se guardan los nuevos valores en la tabla tamano_parqueadero y se inicia el parqueadero vacio
                 
                 Parqueadero.insertarEspacioNuevo(self.niveles,self.espaciosAparcar)
-                Parqueadero.idActual = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
+                id = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
+                Parqueadero.idActual = id[0]
                 Parqueadero.iniciarParqueaderoVacio(self.niveles,self.espaciosAparcar) #Se identifica que no hay espacios guardados, se inicia el parqueadero con disponibilidad en todos
         
         else: #Si no, se guardan los nuevos valores en la tabla tamano_parqueadero y se inicia el parqueadero vacio
-            print("Parqueadero vacio")
+
             Parqueadero.insertarEspacioNuevo(self.niveles,self.espaciosAparcar)
-            Parqueadero.idActual = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
+            id = Parqueadero.consultarID(self.niveles,self.espaciosAparcar)
+            Parqueadero.idActual = id[0]
             Parqueadero.iniciarParqueaderoVacio(self.niveles,self.espaciosAparcar) #Se identifica que no hay espacios guardados, se inicia el parqueadero con disponibilidad en todos
-            
-        # letrasNiveles = list(string.ascii_uppercase)
-
-        # for x in range(self.niveles):
-        #     for y in range(self.espaciosAparcar):
-
-        #         Parqueadero.arrayEspacios[x][y] = {"Disponibilidad":True, "Espacio":letrasNiveles[x]+str(y+1), "Cédula":"","Nombre":"", "Placa":"", "Marca":"", "Modelo":"", "Color":"", "Hora_Llegada":""}
-
 
     def iniciarParqueaderoVacio(niveles:int, espaciosAparcar:int):
         
@@ -127,12 +109,17 @@ class Parqueadero():
         id = Parqueadero.query[1].fetchall()
         return id[0]
 
-    def actualizarDineroTotal(valorSumar):
+    def obtenerDineroTotal():
         Parqueadero.query[1].execute(f'SELECT "dinero_total" FROM public."tamano_parqueadero" WHERE id = {Parqueadero.idActual}')
         dineroGuardado = Parqueadero.query[1].fetchone()
 
-        print("ESTE ES EL DINERO GUARADO",dineroGuardado[0])
-        dineroTotal = float (dineroGuardado[0])+valorSumar
+        return dineroGuardado[0]
+    
+    def actualizarDineroTotal(valorSumar):
+        
+        dineroGuardado = Parqueadero.obtenerDineroTotal()
+        
+        dineroTotal = float (dineroGuardado)+valorSumar
 
         Parqueadero.query[1].execute(f'UPDATE public."tamano_parqueadero" SET dinero_total={dineroTotal} WHERE id = {Parqueadero.idActual}')
         Parqueadero.query[0].commit()
